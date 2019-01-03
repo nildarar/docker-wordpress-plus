@@ -17,6 +17,17 @@ RUN apt-get install -y libpq-dev libmemcached-dev && \
         rm memcached.tgz && \
         mv /usr/src/php/ext/memcached-3.0.3 /usr/src/php/ext/memcached
 
+# Install needed php extensions: zip
+#
+RUN apt-get install -y libz-dev && \
+    curl -o zip.tgz -SL http://pecl.php.net/get/zip-1.15.1.tgz && \
+        tar -xf zip.tgz -C /usr/src/php/ext/ && \
+        rm zip.tgz && \
+        mv /usr/src/php/ext/zip-1.15.1 /usr/src/php/ext/zip
+
+RUN docker-php-ext-install memcached
+RUN docker-php-ext-install zip
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
@@ -28,35 +39,8 @@ RUN { \
         echo 'opcache.enable_cli=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-
-# Install needed php extensions: memcache
-#
-RUN apt-get install --no-install-recommends -y unzip libssl-dev libpcre3 libpcre3-dev && \
-    cd /usr/src/php/ext/ && \
-    curl -sSL -o php7.zip https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip && \
-    unzip php7.zip && \
-    mv pecl-memcache-NON_BLOCKING_IO_php7 memcache && \
-    docker-php-ext-configure memcache --with-php-config=/usr/local/bin/php-config && \
-    docker-php-ext-install memcache && \
-    echo "extension=memcache.so" > /usr/local/etc/php/conf.d/ext-memcache.ini && \
-    rm -rf /tmp/pecl-memcache-php7 php7.zip
-
-
-# Install needed php extensions: zip
-#
-RUN apt-get install -y libz-dev && \
-    curl -o zip.tgz -SL http://pecl.php.net/get/zip-1.15.1.tgz && \
-        tar -xf zip.tgz -C /usr/src/php/ext/ && \
-        rm zip.tgz && \
-        mv /usr/src/php/ext/zip-1.15.1 /usr/src/php/ext/zip
-
-RUN docker-php-ext-install memcached
-RUN docker-php-ext-install memcache
-RUN docker-php-ext-install zip
-
 # Cleanup
 RUN rm -rf /var/lib/apt/lists/*
-
 
 # ENTRYPOINT resets CMD
 ENTRYPOINT ["docker-entrypoint.sh"]
