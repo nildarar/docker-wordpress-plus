@@ -44,4 +44,4 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # ENTRYPOINT resets CMD
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["apache2-foreground"]
