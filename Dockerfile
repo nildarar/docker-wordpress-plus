@@ -4,7 +4,7 @@ LABEL maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
       version="1.0"
       
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive
-RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat 
+RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat zlib1g-dev 
 
 RUN mkdir -p /usr/src/php/ext
 
