@@ -17,6 +17,18 @@ RUN apt-get install -y libpq-dev libmemcached-dev && \
         rm memcached.tgz && \
         mv /usr/src/php/ext/memcached-3.0.3 /usr/src/php/ext/memcached
 
+# Install needed php extensions: memcache
+#
+RUN apt-get install --no-install-recommends -y unzip libssl-dev libpcre3 libpcre3-dev && \
+    cd /usr/src/php/ext/ && \
+    curl -sSL -o php7.zip https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip && \
+    unzip php7.zip && \
+    mv pecl-memcache-NON_BLOCKING_IO_php7 memcache && \
+    docker-php-ext-configure memcache --with-php-config=/usr/local/bin/php-config && \
+    docker-php-ext-install memcache && \
+    echo "extension=memcache.so" > /usr/local/etc/php/conf.d/ext-memcache.ini && \
+    rm -rf /tmp/pecl-memcache-php7 php7.zip
+
 # Install needed php extensions: zip
 #
 RUN apt-get install -y libz-dev && \
@@ -26,6 +38,7 @@ RUN apt-get install -y libz-dev && \
         mv /usr/src/php/ext/zip-1.15.1 /usr/src/php/ext/zip
 
 RUN docker-php-ext-install memcached
+RUN docker-php-ext-install memcache
 RUN docker-php-ext-install zip
 
 # set recommended PHP.ini settings
@@ -38,6 +51,14 @@ RUN { \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# Install needed wordpress extensions: WP-FFPC
+#
+RUN cd /usr/src/wordpress/wp-content/plugins && \
+    curl -o wp-ffpc.zip -L https://downloads.wordpress.org/plugin/wp-ffpc.zip && \
+    unzip -o wp-ffpc.zip && \
+    chown -R www-data:www-data wp-ffpc && \
+    rm -f wp-ffpc.zip
 
 # Cleanup
 RUN rm -rf /var/lib/apt/lists/*
