@@ -10,27 +10,27 @@ RUN rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/php/ext
 
-# https://forum.mysterydata.com/topic/4/cwp-help-to-install-memcached/4
-# First install libmemcached
-RUN cd /usr/local/src
-RUN wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz && tar -zxvf libmemcached-1.0.18.tar.gz
-RUN cd libmemcached-1.0.18
-RUN ./configure
-RUN make && make install
+# # https://forum.mysterydata.com/topic/4/cwp-help-to-install-memcached/4
+# # First install libmemcached
+# RUN cd /usr/local/src
+# RUN wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz && tar -zxvf libmemcached-1.0.18.tar.gz
+# RUN cd libmemcached-1.0.18
+# RUN ./configure
+# RUN make && make install
 
-# then install memcached from pecl
-RUN cd /usr/local/src 
-RUN rm -rf memcached*
-RUN curl https://pecl.php.net/get/memcached -o memcached.tgz && tar -xf memcached.tgz
-RUN cd memcached-* 
-RUN /opt/alt/php-fpm73/usr/bin/phpize
-RUN ./configure --with-php-config=/opt/alt/php-fpm73/usr/bin/php-config
-RUN make && make install
+# # then install memcached from pecl
+# RUN cd /usr/local/src 
+# RUN rm -rf memcached*
+# RUN curl https://pecl.php.net/get/memcached -o memcached.tgz && tar -xf memcached.tgz
+# RUN cd memcached-* 
+# RUN /opt/alt/php-fpm73/usr/bin/phpize
+# RUN ./configure --with-php-config=/opt/alt/php-fpm73/usr/bin/php-config
+# RUN make && make install
 
-RUN grep "memcached.so" /opt/alt/php-fpm73/usr/php/php.d/memcached.ini 2> /dev/null 1> /dev/null|| echo "extension=memcached.so" > /opt/alt/php-fpm73/usr/php/php.d/memcached.ini
+# RUN grep "memcached.so" /opt/alt/php-fpm73/usr/php/php.d/memcached.ini 2> /dev/null 1> /dev/null|| echo "extension=memcached.so" > /opt/alt/php-fpm73/usr/php/php.d/memcached.ini
 
-# Install needed php extensions: memcached
-#
+# # Install needed php extensions: memcached
+# #
 # RUN apt-get install -y libpq-dev libmemcached-dev && \
 #     curl -o memcached.tgz -SL http://pecl.php.net/get/memcached-3.0.3.tgz && \
 #         tar -xf memcached.tgz -C /usr/src/php/ext/ && \
@@ -58,7 +58,7 @@ RUN apt-get install -y libz-dev && \
         rm zip.tgz && \
         mv /usr/src/php/ext/zip-1.15.1 /usr/src/php/ext/zip
 
-RUN docker-php-ext-install memcached
+# RUN docker-php-ext-install memcached
 RUN docker-php-ext-install memcache
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install soap
