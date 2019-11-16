@@ -1,4 +1,4 @@
-FROM wordpress:latest
+FROM wordpress:php7.2-fpm
 
 LABEL maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
       version="1.0"
