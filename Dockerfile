@@ -5,7 +5,8 @@ LABEL maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
    
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive
 RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat zlib1g-dev 
-RUN apt-get install -y libxml2 libxml2-dev
+RUN apt-get install -y libxml2 libxml2-dev wget 
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/php/ext
 
