@@ -30,7 +30,7 @@ RUN { \
 
 # Install needed php extensions: memcache
 #
-RUN apt-get install --no-install-recommends -y unzip libssl-dev libpcre3 libpcre3-dev && \
+RUN apt-get install --no-install-recommends -y unzip zlib1g-dev libssl-dev libpcre3 libpcre3-dev && \
     cd /usr/src/php/ext/ && \
     curl -sSL -o php7.zip https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip && \
     unzip php7.zip && \
