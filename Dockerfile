@@ -2,41 +2,31 @@ FROM wordpress:latest
 
 LABEL maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
       version="1.0"
-   
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive
-RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat zlib1g-dev 
-RUN apt-get install -y libxml2 libxml2-dev wget unzip
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat 
 
 RUN mkdir -p /usr/src/php/ext
 
-# # https://forum.mysterydata.com/topic/4/cwp-help-to-install-memcached/4
-# # First install libmemcached
-# RUN cd /usr/local/src
-# RUN wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz && tar -zxvf libmemcached-1.0.18.tar.gz
-# RUN cd libmemcached-1.0.18
-# RUN ./configure
-# RUN make && make install
+# Install needed php extensions: memcached
+#
+RUN apt-get install -y libpq-dev libmemcached-dev && \
+    curl -o memcached.tgz -SL http://pecl.php.net/get/memcached-3.0.3.tgz && \
+        tar -xf memcached.tgz -C /usr/src/php/ext/ && \
+        echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini && \
+        rm memcached.tgz && \
+        mv /usr/src/php/ext/memcached-3.0.3 /usr/src/php/ext/memcached
 
-# # then install memcached from pecl
-# RUN cd /usr/local/src 
-# RUN rm -rf memcached*
-# RUN curl https://pecl.php.net/get/memcached -o memcached.tgz && tar -xf memcached.tgz
-# RUN cd memcached-* 
-# RUN /opt/alt/php-fpm73/usr/bin/phpize
-# RUN ./configure --with-php-config=/opt/alt/php-fpm73/usr/bin/php-config
-# RUN make && make install
-
-# RUN grep "memcached.so" /opt/alt/php-fpm73/usr/php/php.d/memcached.ini 2> /dev/null 1> /dev/null|| echo "extension=memcached.so" > /opt/alt/php-fpm73/usr/php/php.d/memcached.ini
-
-# # Install needed php extensions: memcached
-# #
-# RUN apt-get install -y libpq-dev libmemcached-dev && \
-#     curl -o memcached.tgz -SL http://pecl.php.net/get/memcached-3.0.3.tgz && \
-#         tar -xf memcached.tgz -C /usr/src/php/ext/ && \
-#         echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini && \
-#         rm memcached.tgz && \
-#         mv /usr/src/php/ext/memcached-3.0.3 /usr/src/php/ext/memcached
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=2'; \
+        echo 'opcache.fast_shutdown=1'; \
+        echo 'opcache.enable_cli=1'; \
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install needed php extensions: memcache
 #
@@ -58,21 +48,10 @@ RUN apt-get install -y libz-dev && \
         rm zip.tgz && \
         mv /usr/src/php/ext/zip-1.15.1 /usr/src/php/ext/zip
 
-# RUN docker-php-ext-install memcached
+RUN docker-php-ext-install memcached
 RUN docker-php-ext-install memcache
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install soap
-
-# set recommended PHP.ini settings
-# see https://secure.php.net/manual/en/opcache.installation.php
-RUN { \
-        echo 'opcache.memory_consumption=128'; \
-        echo 'opcache.interned_strings_buffer=8'; \
-        echo 'opcache.max_accelerated_files=4000'; \
-        echo 'opcache.revalidate_freq=2'; \
-        echo 'opcache.fast_shutdown=1'; \
-        echo 'opcache.enable_cli=1'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install needed wordpress extensions: WP-FFPC
 #
