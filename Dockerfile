@@ -14,13 +14,16 @@ RUN mkdir -p /usr/src/php/ext
 # First install libmemcached
 RUN cd /usr/local/src
 RUN wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz && tar -zxvf libmemcached-1.0.18.tar.gz
-RUN cd libmemcached-1.0.18 && ./configure
+RUN cd libmemcached-1.0.18
+RUN ./configure
 RUN make && make install
 
 # then install memcached from pecl
-RUN cd /usr/local/src && rm -rf memcached*
+RUN cd /usr/local/src 
+RUN rm -rf memcached*
 RUN curl https://pecl.php.net/get/memcached -o memcached.tgz && tar -xf memcached.tgz
-RUN cd memcached-* && /opt/alt/php-fpm73/usr/bin/phpize
+RUN cd memcached-* 
+RUN /opt/alt/php-fpm73/usr/bin/phpize
 RUN ./configure --with-php-config=/opt/alt/php-fpm73/usr/bin/php-config
 RUN make && make install
 
