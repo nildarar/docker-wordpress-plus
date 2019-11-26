@@ -1,7 +1,7 @@
-FROM wordpress:php7.2-fpm
+FROM wordpress:php7.2-apache
 
 LABEL maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
-      version="1.0"
+      version="2.0"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive
 RUN apt-get install --no-install-recommends -y tidy csstidy nano netcat libxml2 libxml2-dev
