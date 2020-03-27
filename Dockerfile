@@ -19,6 +19,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive && \
       libmcrypt-dev \
       libssl-dev \
       libz-dev \
+      libzip-dev \
       unzip \
       zip \
       nginx \
