@@ -49,7 +49,7 @@ RUN docker-php-ext-configure imap --with-imap --with-imap-ssl --with-kerberos &&
     docker-php-ext-install imap intl mbstring mysqli pdo_mysql zip gd opcache tidy bcmath bz2 curl exif json phar simplexml soap xml xmlrpc && \
     docker-php-ext-enable imap intl mbstring mysqli pdo_mysql zip gd opcache tidy bcmath bz2 curl exif json phar simplexml soap xml xmlrpc
 
-RUN pecl install memcached-3.0.3 && \
+RUN pecl install memcached-3.1.3 && \
     docker-php-ext-enable memcached
     
 RUN pecl install redis && \
