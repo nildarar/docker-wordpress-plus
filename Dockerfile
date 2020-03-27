@@ -1,4 +1,4 @@
-FROM wordpress:php7.2-apache
+FROM wordpress:php7.3-apache
 
 LABEL vendor="NILDARAR" \
       maintainer="SOHRAB NILDARAR <sohrab@nildarar.com>" \
