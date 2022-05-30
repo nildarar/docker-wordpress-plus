@@ -1,4 +1,4 @@
-ARG PHP_VER=7.3
+ARG PHP_VER=8.1
 FROM wordpress:php${PHP_VER}-apache
 MAINTAINER nildarar
       
@@ -32,7 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive && \
       zlib1g-dev \
       systemd\
       libjpeg-dev \
-  	  libpng-dev \
+      libpng-dev \
       libtidy-dev \
       libbz2-dev \
       curl \
